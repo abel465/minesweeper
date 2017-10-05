@@ -1,6 +1,6 @@
 # minesweeper
 
-###Features include:
+### Features include:
 
  - Difficulty options
 
@@ -22,7 +22,7 @@
 
  - Other standard minesweeper features
 
-###Known Issues:
+### Known Issues:
 
  - crashes with a large amount of squares ( > 3000)
  
