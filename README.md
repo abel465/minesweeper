@@ -8,7 +8,7 @@
 		Easy	 9		 9		 12
 		Medium	 16		 16		 40
 		Hard	 16		 30		 75
-		Custom	 x		 x		 x
+		Custom	 x		 y		 z
 
  - Flagging with right click
 
@@ -27,3 +27,5 @@
  - crashes with a large amount of squares ( > 3000)
  
  - Takes a while to create a large amount of squares. eg: 10 seconds for 2800 squares
+
+ - Freezes when making custom grid with more mines than squares
