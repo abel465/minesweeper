@@ -520,6 +520,8 @@ class Game(Top):
                 self.squares[(row,col)] = Label(self.frame,image=self.block_image,bd=0)
                 self.squares[(row,col)].grid(row=0, column=0)
 
+                self.squares[(row,col)].flagged = False
+
                 #binds
                 self.squares[(row,col)].bind('<Button-3>', lambda event=0,row=row,col=col:self.right_click(event,row,col))
                 self.squares[(row,col)].bind('<Button-1>', lambda event=0,row=row,col=col:self.left_click(event,row,col))
@@ -618,6 +620,9 @@ class Game(Top):
                                     self.squares[(row+r,col+c)].destroy()
                                     del self.squares[(row+r,col+c)]
 
+    def redraw_mine_count(self):
+        self.gui.count_var.set('0'*(3-len(str(self.num_bombs-self.flags)))+str(self.num_bombs-self.flags))
+
     def left_click(self, event, row, col):
         '''provides visual feedback when the left mouse button is clicked'''
         self.squares[(row,col)].configure(image=self.default_image)
@@ -627,6 +632,9 @@ class Game(Top):
         '''provides visual feedback and performs actions when the left mouse button is released'''
         self.gui.restart_b.configure(image=self.smile_image)
         if self.on_button[(row,col)] or bypass:
+            if self.squares[(row,col)].flagged:
+                self.flags -= 1
+                self.redraw_mine_count()
             if not self.clicked:
                 self.clicked = True
                 self.start(row,col)
@@ -650,15 +658,16 @@ class Game(Top):
 
     def right_click(self, event, row, col):
         '''flags/unflags the square when the right mouse button is clicked'''
-        image_num = int(self.squares[(row,col)].cget('image').strip('pyimage'))
-        #this will work for the default image and when the image is resized
-        if image_num == 7 or ((image_num - 6) % 9 == 0 and image_num != 5):
-            self.squares[(row,col)].configure(image=self.flag_image)
-            self.flags += 1
-        else:
+        if self.squares[(row,col)].flagged:
             self.squares[(row,col)].configure(image=self.block_image)
+            self.squares[(row,col)].flagged = False
             self.flags -= 1
-        self.gui.count_var.set('0'*(3-len(str(self.num_bombs-self.flags)))+str(self.num_bombs-self.flags))
+        else:
+            self.squares[(row,col)].configure(image=self.flag_image)
+            self.squares[(row,col)].flagged = True
+            self.flags += 1
+
+        self.redraw_mine_count()
 
     def restart(self, *args):
         '''resets variables that change throughout gameplay'''
